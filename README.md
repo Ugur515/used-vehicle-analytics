@@ -5,7 +5,7 @@ Ziel dieses Projekts ist es, eine Plattform für Gebrauchtfahrzeuge zu erschaffe
 1. **Business Intelligence (BI) Dashboard:** Datengetriebene Analysen, Durchschnitte und Marktverteilungen.
 2. **Machine Learning Price Predictor:** Ein ML-Modell, das aus den historischen Daten lernt, um faire Fahrzeugpreise vorherzusagen.
 
-## 🛠️ Tech Stack & Tools
+## Tech Stack & Tools
 **Aktuell im Einsatz (Data Engineering & Infra):**
 * **Data Processing:** Python (Pandas, Faker)
 * **Database & Bridge:** PostgreSQL, SQLAlchemy, Psycopg2
