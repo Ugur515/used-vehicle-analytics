@@ -27,10 +27,10 @@ Ziel dieses Projekts ist es, eine Plattform für Gebrauchtfahrzeuge zu erschaffe
 - [x] Datenintegrität via SQL in VS Code überprüft.
 
 ### Phase 2: Backend & API-Entwicklung (Aktueller Schritt)
-- [ ] FastAPI Projekt initialisieren und strukturieren.
-- [ ] Datenbank-Anbindung (SQLAlchemy Engine) im Backend integrieren.
-- [ ] **Analytics-Endpunkte** bauen (z.B. `/api/stats/brands` für Marktanteile, `/api/stats/prices` für Durchschnitte).
-- [ ] **Prediction-Endpunkt** vorbereiten (`/api/predict`), der Fahrzeugdaten entgegennimmt.
+- [x] FastAPI Projekt initialisieren und strukturieren.
+- [x] Datenbank-Anbindung (SQLAlchemy Engine) im Backend integrieren.
+- [x] **Analytics-Endpunkte** bauen (z.B. `/api/stats/brands` für Marktanteile, `/api/stats/prices` für Durchschnitte).
+- [x] **Prediction-Endpunkt** vorbereiten (`/api/predict`), der Fahrzeugdaten entgegennimmt.
 
 ### Phase 3: Data Science & Machine Learning (Geplant)
 - [ ] Daten aus PostgreSQL in ein Jupyter Notebook laden.
