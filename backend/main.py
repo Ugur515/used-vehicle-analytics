@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Query
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy import create_engine, text
 
@@ -6,6 +7,16 @@ app = FastAPI(
     title="Used Vehicle Analytics & Prediction API",
     description="Ein mächtiges Backend für Marktanalysen und ML-Preisschätzungen von Gebrauchtfahrzeugen.",
     version="1.0.0"
+)
+
+# --- CORS KONFIGURATION (NEU) ---
+# Erlaubt dem React-Frontend (Port 5173), Daten anzufragen
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],  # Erlaubt GET, POST, etc.
+    allow_headers=["*"],
 )
 
 # Verbindung zur Docker-PostgreSQL-Datenbank
