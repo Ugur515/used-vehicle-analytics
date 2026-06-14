@@ -39,8 +39,8 @@ Ziel dieses Projekts ist es, eine Plattform für Gebrauchtfahrzeuge zu erschaffe
 - [ ] Abspeichern des Modells (`joblib`/`pickle`) und Einbindung in die FastAPI.
 
 ### Phase 4: Frontend & UI (Geplant)
-- [ ] Modernes React-Projekt mit TailwindCSS aufsetzen.
-- [ ] **Dashboard-Ansicht:** Interaktive Charts (Chart.js/Recharts) zur Marktanalyse basierend auf den API-Daten.
+- [x] Modernes React-Projekt mit TailwindCSS aufsetzen.
+- [x] **Dashboard-Ansicht:** Interaktive Charts (Chart.js/Recharts) zur Marktanalyse basierend auf den API-Daten.
 - [ ] **Rechner-Ansicht:** Ein interaktives Formular, das die ML-Preiseinschätzung live abfragt und anzeigt.
 
 ## ⚙️ Lokales Setup (How to run)
