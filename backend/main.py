@@ -9,7 +9,7 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# --- CORS KONFIGURATION (NEU) ---
+# --- CORS KONFIGURATION ---
 # Erlaubt dem React-Frontend (Port 5173), Daten anzufragen
 app.add_middleware(
     CORSMiddleware,
@@ -39,7 +39,7 @@ def read_root():
         "message": "Willkommen bei der Fahrzeug-Analytics API! Gehe zu /docs für die interaktive Dokumentation."
     }
 
-# --- PHASE 1 ANALYTICS: BASIS-STATISTIKEN ---
+# --- ANALYTICS: BASIS-STATISTIKEN ---
 
 @app.get("/api/fahrzeuge/pro-typ")
 def get_vehicle_count_by_type():
@@ -153,6 +153,22 @@ def get_model_deep_dive(marke: str = Query("VW", description="Z.B. VW, BMW, Audi
             "durchschnitts_km": row[3]
         } for row in result]
     return {"beschreibung": f"Modell-Deep-Dive für Marke: {marke}", "daten": data}
+
+@app.get("/api/stats/preis-kilometer")
+def get_preis_kilometer(typ: str = Query("Auto", description="'Auto' oder 'Motorrad'")):
+    """Daten für den Scatter-Plot: Preis im Verhältnis zum Kilometerstand (Limitiert auf 500 für Performance)."""
+    query = text("""
+        SELECT kilometerstand, preis_euro, marke 
+        FROM fahrzeuge 
+        WHERE fahrzeugtyp = :typ 
+        ORDER BY RANDOM() 
+        LIMIT 500;
+    """)
+    with engine.connect() as connection:
+        result = connection.execute(query, {"typ": typ})
+        # Wir nutzen row[0], row[1], row[2], exakt wie in deinen anderen Endpunkten!
+        data = [{"kilometerstand": row[0], "preis": row[1], "marke": row[2]} for row in result]
+    return {"beschreibung": f"Preis-Kilometer Scatter ({typ})", "daten": data}
 
 # --- MACHINE LEARNING PLATZHALTER (POST) ---
 
