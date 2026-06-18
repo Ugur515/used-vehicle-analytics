@@ -124,7 +124,6 @@ def get_top_cities(typ: str = Query("Auto", description="'Auto' oder 'Motorrad'"
         FROM fahrzeuge
         WHERE fahrzeugtyp = :typ
         GROUP BY standort
-        HAVING COUNT(*) > 500
         ORDER BY avg_preis DESC
         LIMIT 5;
     """)
