@@ -19,26 +19,26 @@ Ziel dieses Projekts ist es, eine Plattform für Gebrauchtfahrzeuge zu erschaffe
 
 ## Projekt-Fortschritt (Roadmap)
 
-### Phase 1: Data Engineering & Database (Abgeschlossen)
+### Phase 1: Data Engineering & Database 
 - [x] Python-Skript zur Generierung von 200.000 realistischen Gebrauchtwagen & Motorrädern gebaut (`Faker`).
 - [x] Logische Datenstrukturen und Abhängigkeiten (Wertverlust vs. Alter/KM) im Datengenerator verankert.
 - [x] PostgreSQL Datenbank als Docker-Container aufgesetzt.
 - [x] Python ETL-Pipeline implementiert, die Rohdaten bereinigt, transformiert (lowercase Schema) und in die DB lädt.
 - [x] Datenintegrität via SQL in VS Code überprüft.
 
-### Phase 2: Backend & API-Entwicklung (Aktueller Schritt)
+### Phase 2: Backend & API-Entwicklung 
 - [x] FastAPI Projekt initialisieren und strukturieren.
 - [x] Datenbank-Anbindung (SQLAlchemy Engine) im Backend integrieren.
 - [x] **Analytics-Endpunkte** bauen (z.B. `/api/stats/brands` für Marktanteile, `/api/stats/prices` für Durchschnitte).
 - [x] **Prediction-Endpunkt** vorbereiten (`/api/predict`), der Fahrzeugdaten entgegennimmt.
 
-### Phase 3: Data Science & Machine Learning (Geplant)
+### Phase 3: Data Science & Machine Learning 
 - [ ] Daten aus PostgreSQL in ein Jupyter Notebook laden.
 - [ ] Feature Engineering & Modell-Training (z. B. mit `Scikit-Learn`).
 - [ ] Validierung des Modells (Wie gut hat die KI die im Generator versteckten Muster gelernt?).
 - [ ] Abspeichern des Modells (`joblib`/`pickle`) und Einbindung in die FastAPI.
 
-### Phase 4: Frontend & UI (Geplant)
+### Phase 4: Frontend & UI 
 - [x] Modernes React-Projekt mit TailwindCSS aufsetzen.
 - [x] **Dashboard-Ansicht:** Interaktive Charts (Chart.js/Recharts) zur Marktanalyse basierend auf den API-Daten.
 - [ ] **Rechner-Ansicht:** Ein interaktives Formular, das die ML-Preiseinschätzung live abfragt und anzeigt.
