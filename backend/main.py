@@ -2,6 +2,10 @@ from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy import create_engine, text
+import joblib
+import pandas as pd
+import os
+from pydantic import BaseModel
 
 app = FastAPI(
     title="Used Vehicle Analytics & Prediction API",
@@ -30,6 +34,14 @@ class FahrzeugAnfrage(BaseModel):
     marke: str
     baujahr: int
     kilometerstand: int
+
+class PreisAnfrage(BaseModel):
+    fahrzeugtyp: str
+    marke: str
+    baujahr: int
+    kilometerstand: int
+    kraftstoff: str
+    getriebe: str
 
 # --- BASIS ENDPUNKT ---
 @app.get("/")
@@ -169,22 +181,52 @@ def get_preis_kilometer(typ: str = Query("Auto", description="'Auto' oder 'Motor
         data = [{"kilometerstand": row[0], "preis": row[1], "marke": row[2]} for row in result]
     return {"beschreibung": f"Preis-Kilometer Scatter ({typ})", "daten": data}
 
-# --- MACHINE LEARNING PLATZHALTER (POST) ---
+# --- KI PREIS-SCHÄTZER  ---
 
 @app.post("/api/predict")
-def predict_price(anfrage: FahrzeugAnfrage):
-    """Nimmt Fahrzeugdaten entgegen und berechnet eine KI-Preisschätzung (Aktuell: Mathematischer Dummy)."""
-    if anfrage.fahrzeugtyp == "Motorrad":
-        basis_wert = 15000
-        abzug_km = (anfrage.kilometerstand / 1000) * 80
-    else:
-        basis_wert = 30000
-        abzug_km = (anfrage.kilometerstand / 1000) * 50
+def predict_price(anfrage: PreisAnfrage):
+    try:
+        # 1. Wo liegen die Gehirn-Dateien? (Wir gehen einen Ordner hoch zu 'python')
+        basis_ordner = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        modell_pfad = os.path.join(basis_ordner, 'python', 'preis_vorhersage_modell.pkl')
+        spalten_pfad = os.path.join(basis_ordner, 'python', 'model_columns.pkl')
 
-    abzug_alter = (2026 - anfrage.baujahr) * 1000
-    geschaetzter_preis = max(500, basis_wert - abzug_alter - abzug_km)
-    
-    return {
-        "status": "Erfolgreich",
-        "vorhergesagter_preis_euro": round(geschaetzter_preis, 2)
-    }
+        # 2. Modell laden
+        modell = joblib.load(modell_pfad)
+        modell_spalten = joblib.load(spalten_pfad)
+
+        # 3. Die Daten vom User in ein Pandas-Format umwandeln
+        input_daten = pd.DataFrame([{
+            'fahrzeugtyp': anfrage.fahrzeugtyp,
+            'marke': anfrage.marke,
+            'kraftstoff': anfrage.kraftstoff,
+            'getriebe': anfrage.getriebe,
+            'alter': 2026 - anfrage.baujahr, # Baujahr in Alter umrechnen
+            'kilometerstand': anfrage.kilometerstand
+        }])
+
+        # 4. WICHTIG: Die KI braucht die Daten EXAKT so (One-Hot-Encoding) wie beim Training
+        input_dummies = pd.get_dummies(input_daten)
+        
+        # Leere Tabelle mit den gelernten Spalten bauen und mit 0 füllen
+        finale_features = pd.DataFrame(columns=modell_spalten)
+        finale_features.loc[0] = 0 
+
+        # Die echten Werte aus dem Input in die Tabelle übertragen
+        for col in input_dummies.columns:
+            if col in finale_features.columns:
+                finale_features[col] = input_dummies[col]
+
+        # 5. DIE MAGISCHE VORHERSAGE MACHEN
+        geschaetzter_preis = modell.predict(finale_features)[0]
+
+        return {
+            "erfolg": True,
+            "geschaetzter_preis": int(geschaetzter_preis)
+        }
+
+    except Exception as e:
+        # Falls wirklich mal was abstürzt, drucken wir den Fehler rot im Terminal aus!
+        print(f"!!! FEHLER IN DER KI !!!: {e}")
+        return {"erfolg": False, "fehler": str(e)}
+
